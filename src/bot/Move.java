@@ -31,6 +31,9 @@ public class Move {
 		JSONObject thisMove = (JSONObject) JSONValue.parse(moveData.get(name).toString());
 		this.bp = Integer.parseInt(thisMove.get("basePower").toString());
 		String acc = thisMove.get("accuracy").toString();
+		if(thisMove.get("multihit") != null){
+			this.bp*=3;
+		}
 		if(acc.equals("true"))
 			this.accuracy = 100;
 		else

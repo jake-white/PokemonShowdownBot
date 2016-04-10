@@ -36,6 +36,7 @@ public class Situation {
 		else{ //can do ANYTHING!
 			makeBestSwitch();
 			makeBestMove();
+			System.out.println("Switch: " + highestSwitchPriority + ", Move: " + highestMovePriority);
 			if(highestSwitchPriority > highestMovePriority){
 				return new Decision(DecisionType.SWITCH, makeBestSwitch());
 			}
@@ -135,12 +136,14 @@ public class Situation {
 		int bestSwitch = 0;
 		for(int i = 0; i < myMons.length; ++i){
 			switchPriority[i] = switchModifier;
+			double effectiveness = 0;
 			if(myMons[i].isAlive()){
 				try{
 					for(int j = 0; j < theirMon.getTypes().length; ++j){ //checking against the enemy STAB options
 						Move move = new Move("Filler Move", theirMon.getTypes()[j], 0, false);
-						switchPriority[i] += 2/(1+move.getEffectivenessAgainst(myMons[i].getTypes()));
+						effectiveness += 1/(2+move.getEffectivenessAgainst(myMons[i].getTypes()));
 					}
+						switchPriority[i] *= effectiveness;
 				}
 				catch(Exception e){
 					//their mon is also dead. this likely happened due to recoil or u-turn or something
