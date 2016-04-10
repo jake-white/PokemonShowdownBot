@@ -33,6 +33,8 @@ public class Pokemon {
 			this.species = "farfetchd";
 		else if(this.species.equals("porygon-z"))
 			this.species = "porygonz";
+		else if(this.species.equals("ho-oh"))
+			this.species = "hooh";
 		this.status = status.trim();
 		
 		this.alive = alive;

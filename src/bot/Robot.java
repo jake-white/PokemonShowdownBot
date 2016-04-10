@@ -110,8 +110,14 @@ public class Robot implements ActionListener{
 			}
 		}
 		else{ //must be in a battle
-			collectInfo();
-			executeDecision(currentSituation.getDecision());
+			try{
+				collectInfo();
+				executeDecision(currentSituation.getDecision());
+			}
+			catch(Exception e){
+				//weird stuff like forfeits in the middle of info gathering cause this
+				//so this is a general failsafe
+			}				
 		}
 	}
 	
@@ -166,11 +172,12 @@ public class Robot implements ActionListener{
 		catch(Exception e){
 			battleOver = false;
 		}
-			
+			boolean isMega = false;
 		if(!battleOver){
 			try{
 				WebElement mega = driver.findElement(By.className("megaevo"));
 				mega.click(); //making sure to activate Mega Evolution in case there is one available
+				isMega = true;
 			}
 			catch(Exception e){
 				
@@ -230,49 +237,51 @@ public class Robot implements ActionListener{
 				moves = new Move[MAX_MOVES];
 				mons = new Pokemon[MAX_MONS];
 			}
-			if(movable){
-				currentMonStatus = driver.findElement(By.className("rstatbar")).findElement(By.className("status")).getText();
-				for(int i = 0; i < moveset.size(); ++i){
-					String[] moveText = moveset.get(i).getText().split("\n", 3);
-					int pp = 0;
-					if(moveText[2].contains("/"))
-						pp = Integer.parseInt(moveText[2].split("/", 2)[0]);
-					else //if it is a move with 0 PP like struggle
-						pp = 0;
-					boolean isDisabled = false;
-					try{
-						if(moveset.get(i).getAttribute("disabled").equals("disabled")) //disabled if disabled, null if not
-							isDisabled = true;
-						else
+				if(movable){
+					currentMonStatus = driver.findElement(By.className("rstatbar")).findElement(By.className("status")).getText();
+					for(int i = 0; i < moveset.size(); ++i){
+						String[] moveText = moveset.get(i).getText().split("\n", 3);
+						int pp = 0;
+						if(moveText[2].contains("/"))
+							pp = Integer.parseInt(moveText[2].split("/", 2)[0]);
+						else //if it is a move with 0 PP like struggle
+							pp = 0;
+						boolean isDisabled = false;
+						try{
+							if(moveset.get(i).getAttribute("disabled").equals("disabled")) //disabled if disabled, null if not
+								isDisabled = true;
+							else
+								isDisabled = false;
+						}
+						catch(Exception e){
 							isDisabled = false;
+							//if we get here, it means the move is not disabled!
+						}
+						moves[i] = new Move(moveText[0], moveText[1], pp, isDisabled);
 					}
-					catch(Exception e){
-						isDisabled = false;
-						//if we get here, it means the move is not disabled!
-					}
-					moves[i] = new Move(moveText[0], moveText[1], pp, isDisabled);
 				}
-			}
-			if(switchable){
-				for(int i =0; i < pokemon.size(); ++i){
-					boolean isAlive = true;
-					String species = pokemon.get(i).getText();
-					try{
-						if(pokemon.get(i).getAttribute("class").equals("disabled")) //class = disabled if dead, class = null if alive...
-							isAlive = false;
+				if(switchable){
+					for(int i =0; i < pokemon.size(); ++i){
+						boolean isAlive = true;
+						String species = pokemon.get(i).getText();
+						try{
+							if(pokemon.get(i).getAttribute("class").equals("disabled")) //class = disabled if dead, class = null if alive...
+								isAlive = false;
+							else
+								isAlive = true;
+						}
+						catch(Exception e){
+							//if we get here, it means the Pokemon is alive!
+						}
+						if(i==0){
+							if(isMega)
+								mons[i] = new Pokemon(species+"mega", isAlive, currentMonStatus);
+							mons[i] = new Pokemon(species, isAlive, currentMonStatus);
+						}
 						else
-							isAlive = true;
+							mons[i] = new Pokemon(species, isAlive, "");
 					}
-					catch(Exception e){
-						//if we get here, it means the Pokemon is alive!
-					}
-					if(i==0)
-						mons[i] = new Pokemon(species, isAlive, currentMonStatus);
-					else
-						mons[i] = new Pokemon(species, isAlive, "");
-				}
-			}
-			
+				}			
 			
 			try{
 				WebElement enemyMon = driver.findElement(By.className("lstatbar"));
@@ -289,14 +298,24 @@ public class Robot implements ActionListener{
 	
 	public void executeDecision(Decision decision){
 		if(decision.getType() == DecisionType.MOVE){
-			WebElement movemenu = driver.findElement(By.className("movemenu"));
-			List<WebElement> moveset = movemenu.findElements(By.tagName("button"));			
-			moveset.get(decision.getValue()).click();
+			try{
+				WebElement movemenu = driver.findElement(By.className("movemenu"));
+				List<WebElement> moveset = movemenu.findElements(By.tagName("button"));			
+				moveset.get(decision.getValue()).click();
+			}
+			catch(Exception e){
+				
+			}
 		}
 		else if(decision.getType() == DecisionType.SWITCH){
-			WebElement switchmenu = driver.findElement(By.className("switchmenu"));
-			List<WebElement> pokemon = switchmenu.findElements(By.tagName("button"));
-			pokemon.get(decision.getValue()).click();
+			try{
+				WebElement switchmenu = driver.findElement(By.className("switchmenu"));
+				List<WebElement> pokemon = switchmenu.findElements(By.tagName("button"));
+				pokemon.get(decision.getValue()).click();
+			}
+			catch(Exception e){
+				
+			}
 		}
 		//else wait, because it is DecisionType.WAIT
 	}
