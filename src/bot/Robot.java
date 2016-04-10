@@ -175,9 +175,11 @@ public class Robot implements ActionListener{
 			boolean isMega = false;
 		if(!battleOver){
 			try{
-				WebElement mega = driver.findElement(By.className("megaevo"));
-				mega.click(); //making sure to activate Mega Evolution in case there is one available
-				isMega = true;
+				WebElement mega = driver.findElement(By.name("megaevo"));
+				if(mega.getAttribute("checked") == null){
+					mega.click(); //making sure to activate Mega Evolution in case there is one available
+					isMega = true;
+				}
 			}
 			catch(Exception e){
 				
