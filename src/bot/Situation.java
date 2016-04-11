@@ -36,7 +36,6 @@ public class Situation {
 		else{ //can do ANYTHING!
 			makeBestSwitch();
 			makeBestMove();
-			System.out.println("Switch: " + highestSwitchPriority + ", Move: " + highestMovePriority);
 			if(highestSwitchPriority > highestMovePriority){
 				return new Decision(DecisionType.SWITCH, makeBestSwitch());
 			}
