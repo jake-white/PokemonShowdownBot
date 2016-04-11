@@ -18,7 +18,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Robot implements ActionListener{
 	private WebDriver driver;
 	private String username = "squirrelBoTT", password;
-	private boolean available = true, hasMessaged = false, isLaddering = false;
+	private boolean available = true, hasMessaged = false, isLaddering = true;
 	private int wins = 0, losses = 0;
 	private Timer tick;
 	private Situation currentSituation;
