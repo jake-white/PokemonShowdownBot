@@ -18,7 +18,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Robot implements ActionListener{
 	private WebDriver driver;
 	private String username = "squirrelBoTT", password;
-	private boolean available = true, hasMessaged = false, isLaddering = true;
+	private boolean available = true, hasMessaged = false, isLaddering = false;
 	private int wins = 0, losses = 0;
 	private Timer tick;
 	private Situation currentSituation;
@@ -80,7 +80,7 @@ public class Robot implements ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {		
+	public void actionPerformed(ActionEvent arg0) {
 		if(this.available){
 			battleSearch();
 		}
@@ -97,7 +97,7 @@ public class Robot implements ActionListener{
 			try{
 				List<WebElement> chatBoxes = driver.findElement(
 						By.className("battle-log-add")).findElement(
-								By.className("chatbox")).findElements(	
+								By.className("chatbox")).findElements(
 										By.tagName("textarea"));
 				WebElement chatBox = chatBoxes.get(1);
 				chatBox.click();
@@ -250,12 +250,17 @@ public class Robot implements ActionListener{
 							pp = 0;
 						boolean isDisabled = false;
 						try{
-							if(moveset.get(i).getAttribute("disabled").equals("disabled")) //disabled if disabled, null if not
+							if(moveset.get(i).getAttribute("disabled").equals("true")){ //true if disabled, null if not. shame on you for inconsistency, zarel.
 								isDisabled = true;
-							else
+								System.out.println(moveset.get(i).toString() + " is DISABLED.");
+							}
+							else{
+								System.out.println(moveset.get(i).toString() + " is not disabled, it is " + moveset.get(i).getAttribute("disabled"));
 								isDisabled = false;
+							}
 						}
 						catch(Exception e){
+							System.out.println(moveset.get(i).toString() + " is not disabled, it is " + moveset.get(i).getAttribute("disabled"));
 							isDisabled = false;
 							//if we get here, it means the move is not disabled!
 						}

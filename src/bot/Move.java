@@ -39,6 +39,7 @@ public class Move {
 		else
 			this.accuracy = Integer.parseInt(acc);
 		this.category = thisMove.get("category").toString();
+	//	System.out.println(this.toString());
 	}
 	
 	public static void parseJSON(){
@@ -87,7 +88,7 @@ public class Move {
 	}
 	
 	public String toString(){
-		return "Move: " + name + " is a " + category + ", " + bp + "-power " + type + "-type move with " + pp + " PP left.";
+		return "Move: " + name + " is a " + category + ", " + bp + "-power " + type + "-type move with " + pp + " PP left.  Disabled = " + disabled;
 	}
 
 	public String getName() {
