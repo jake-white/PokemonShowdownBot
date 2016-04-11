@@ -252,15 +252,12 @@ public class Robot implements ActionListener{
 						try{
 							if(moveset.get(i).getAttribute("disabled").equals("true")){ //true if disabled, null if not. shame on you for inconsistency, zarel.
 								isDisabled = true;
-								System.out.println(moveset.get(i).toString() + " is DISABLED.");
 							}
 							else{
-								System.out.println(moveset.get(i).toString() + " is not disabled, it is " + moveset.get(i).getAttribute("disabled"));
 								isDisabled = false;
 							}
 						}
 						catch(Exception e){
-							System.out.println(moveset.get(i).toString() + " is not disabled, it is " + moveset.get(i).getAttribute("disabled"));
 							isDisabled = false;
 							//if we get here, it means the move is not disabled!
 						}
